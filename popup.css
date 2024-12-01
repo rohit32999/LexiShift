@@ -1,0 +1,80 @@
+/* Reset default margin and padding */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: rgb(
+    16,
+    16,
+    16
+  ); /* Semi-transparent background for contrast */
+  padding: 5px;
+  width: 250px; /* Adjust width to suit the popup size */
+}
+
+/* Glassmorphism effect for popup container */
+.popup-container {
+  background: rgba(65, 65, 65, 0.855); /* Transparent white */
+  border: 0.5px solid rgb(103, 101, 101); /* Light border */
+  border-radius: 6px;
+  backdrop-filter: blur(1px); /* Blur effect */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  padding: 20px;
+  text-align: center;
+}
+
+/* Title Styling */
+.popup-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: hsl(21, 68%, 54%); /* White text */
+  margin-bottom: 15px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); /* Subtle text shadow */
+}
+
+.popup-tagline {
+  font-size: 16px;
+  color: #cccccc;
+  font-style: italic;
+  margin-top: 0;
+}
+
+/* Styling the content area */
+.popup-content {
+  margin-bottom: 15px;
+  color: #f0f0f0; /* Light text color */
+}
+
+/* Dropdown styling */
+.popup-select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Light border */
+  font-size: 14px;
+  color: #000000; /* Black text for dropdown */
+  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+}
+
+/* Button styling */
+.popup-button {
+  width: 100%;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.3); /* Transparent button */
+  border: 1px solid rgba(255, 255, 255, 0.4); /* Light border */
+  color: #ffffff; /* White text */
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  backdrop-filter: blur(5px); /* Slight blur for the button */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.popup-button:hover {
+  background-color: rgba(255, 255, 255, 0.6); /* Brighter on hover */
+  color: #000000; /* Black text on hover */
+}
