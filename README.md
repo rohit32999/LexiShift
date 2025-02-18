@@ -1,2 +1,2 @@
 # LexiShift
-A chrome web extension to find meanings of highlighted words.
+An utility web extension to find meanings of highlighted words.
