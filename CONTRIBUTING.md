@@ -16,12 +16,14 @@ Once you have forked the repo, clone it to your local machine:
 ```bash
 git clone https://github.com/<your-username>/LexiShift.git
 cd LexiShift
-3. Set Up the Project
+```
+####3. Set Up the Project
 Ensure you have a web browser that supports extensions (Chrome or Firefox).
 Load the extension manually:
 Open Chrome and go to chrome://extensions/
 Enable Developer Mode (toggle on the top right)
 Click Load unpacked and select the LexiShift project folder.
+
 4. Explore the Codebase
 LexiShift consists of:
 
