@@ -14,46 +14,80 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     popup.style.position = "fixed";
     popup.style.bottom = "20px";
     popup.style.right = "20px";
-    popup.style.width = "300px";
-    popup.style.background = "rgba(0,0,0,0.6)"; // Transparent white
+    popup.style.width = "340px";
+    popup.style.background = "rgba(255, 255, 255, 0.1)"; // Transparent white
     popup.style.border = "1px solid rgba(255, 255, 255, 0.3)"; // Light border
-    popup.style.backdropFilter = "blur(10px)"; // Blur effect
-    popup.style.color = "#fff"; // White text
-    popup.style.padding = "15px";
-    popup.style.borderRadius = "16px"; // Rounded corners
-    popup.style.boxShadow = "0 8px 32px rgba(0, 0, 0, 0.25)"; // Soft shadow
+    popup.style.backdropFilter = "blur(12px)"; // Blur effect
+    popup.style.color = "#333";
+    popup.style.padding = "20px";
+    popup.style.borderRadius = "18px"; // Rounded corners
+    popup.style.boxShadow = "0 12px 32px rgba(0, 0, 0, 0.25)"; // Soft shadow
     popup.style.zIndex = "10000";
     popup.style.fontFamily = "Arial, sans-serif";
+    popup.style.transition = "all 0.3s ease-in-out";
 
     popup.innerHTML = `
-  <h3 style="margin-bottom: 10px; color: #FA9858; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);">LexiShift</h3>
-  <p style="margin: 5px 0;"><strong>Word:</strong> ${word}</p>
-  <p style="margin: 5px 0;"><strong>Definition:</strong> <span id="wordDefinition">Loading...</span></p>
-  <p style="margin: 5px 0;"><strong>Example:</strong> <span id="wordExample">Loading...</span></p>
-  <button
-    style="
-      margin-top: 10px;
-      padding: 5px 10px;
-      background-color: rgba(255, 255, 255, 0.3);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      border-radius: 8px;
-      cursor: pointer;
-      backdrop-filter: blur(5px);
-      transition: background-color 0.3s ease, color 0.3s ease;
-    "
-    id="closePopup"
-    onmouseover="this.style.backgroundColor='rgba(255, 255, 255, 0.6)'; this.style.color='#000';"
-    onmouseout="this.style.backgroundColor='rgba(255, 255, 255, 0.3)'; this.style.color='#fff';"
-  >
-    Close
-  </button>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+      <h3 style="margin: 0; color: #FA9858; font-size: 18px; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);">📚 LexiShift</h3>
+      <button id="closePopup" style="
+        padding: 5px 12px;
+        background: #FA9858;
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: background 0.3s ease;">
+        Close
+      </button>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+
+      <!-- Word Box -->
+      <div style="
+        background: rgba(255, 255, 255, 0.3);
+        padding: 12px;
+        border-radius: 12px;
+        border-left: 4px solid #FA9858;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      ">
+        <p style="margin: 0; font-size: 14px;"><strong>🔤 Word:</strong></p>
+        <p style="margin: 5px 0 0; color: #333; font-size: 15px;" id="wordText">${word}</p>
+      </div>
+
+      <!-- Definition Box -->
+      <div style="
+        background: rgba(255, 255, 255, 0.3);
+        padding: 12px;
+        border-radius: 12px;
+        border-left: 4px solid #5E9FFF;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      ">
+        <p style="margin: 0; font-size: 14px;"><strong>💡 Definition:</strong></p>
+        <p style="margin: 5px 0 0; color: #555; font-size: 15px;" id="wordDefinition">Loading...</p>
+      </div>
+
+      <!-- Example Box -->
+      <div style="
+        background: rgba(255, 255, 255, 0.3);
+        padding: 12px;
+        border-radius: 12px;
+        border-left: 4px solid #8BC34A;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      ">
+        <p style="margin: 0; font-size: 14px;"><strong>📖 Example:</strong></p>
+        <p style="margin: 5px 0 0; color: #777; font-size: 15px;" id="wordExample">Loading...</p>
+      </div>
+
+    </div>
 `;
 
     document.body.appendChild(popup);
 
     document.getElementById("closePopup").addEventListener("click", () => {
-      popup.remove();
+      popup.style.opacity="0";
+      setTimeout(()=>popup.remove(),300);
     });
 
     document.body.appendChild(popup);
@@ -80,10 +114,5 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         ).innerText = `Error: ${error.message}`;
         document.getElementById("wordExample").innerText = "N/A";
       });
-
-    // Close the popup when the button is clicked
-    document.getElementById("closePopup").addEventListener("click", () => {
-      popup.remove();
-    });
   }
 });
