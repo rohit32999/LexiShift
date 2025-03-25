@@ -3,19 +3,19 @@ function getCacheKey(word, targetLang) {
   return `${word.toLowerCase()}-${targetLang}`;
 }
 
-function checkCache(word, targetLang) {
+async function checkCache(word, targetLang) {
   const cacheKey = getCacheKey(word, targetLang);
-  return chrome.storage.local.get(cacheKey)
-    .then(result => result[cacheKey]);
+  const result = await chrome.storage.local.get(cacheKey);
+  return result[cacheKey];
 }
 
-function saveToCache(word, targetLang, translation) {
+async function saveToCache(word, targetLang, translation) {
   const cacheKey = getCacheKey(word, targetLang);
   const cacheData = {
     translation,
     timestamp: Date.now()
   };
-  return chrome.storage.local.set({ [cacheKey]: cacheData });
+  await chrome.storage.local.set({ [cacheKey]: cacheData });
 }
 
 chrome.storage.local.get(["textToTranslate", "targetLanguages"], async (data) => {
