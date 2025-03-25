@@ -1,4 +1,4 @@
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   if (message.action === "showMeaning") {
     const word = message.word;
 
@@ -93,26 +93,21 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     document.body.appendChild(popup);
     const apiUrl = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`;
 
-    fetch(apiUrl)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Word not found");
-        }
-        return response.json();
-      })
-      .then((result) => {
-        const definitions = result[0].meanings[0].definitions[0];
-        const definition = definitions.definition || "No definition available.";
-        const example = definitions.example || "No example available.";
+    try {
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        throw new Error("Word not found");
+      }
+      const result = await response.json();
+      const definitions = result[0].meanings[0].definitions[0];
+      const definition = definitions.definition || "No definition available.";
+      const example = definitions.example || "No example available.";
 
-        document.getElementById("wordDefinition").innerText = definition;
-        document.getElementById("wordExample").innerText = example;
-      })
-      .catch((error) => {
-        document.getElementById(
-          "wordDefinition"
-        ).innerText = `Error: ${error.message}`;
-        document.getElementById("wordExample").innerText = "N/A";
-      });
+      document.getElementById("wordDefinition").innerText = definition;
+      document.getElementById("wordExample").innerText = example;
+    } catch (error) {
+      document.getElementById("wordDefinition").innerText = `Error: ${error.message}`;
+      document.getElementById("wordExample").innerText = "N/A";
+    }
   }
 });

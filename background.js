@@ -13,43 +13,34 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 });
 
 // Handle keyboard shortcut command
-chrome.commands.onCommand.addListener((command) => {
+chrome.commands.onCommand.addListener(async (command) => {
   if (command === "get-word-meaning") {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const activeTab = tabs[0];
-      chrome.scripting.executeScript(
-        {
-          target: { tabId: activeTab.id },
-          func: () => {
-            const selectedText = window.getSelection().toString();
-            return selectedText || null;
-          },
-        },
-        (injectionResults) => {
-          const selectedText = injectionResults[0]?.result;
-          if (selectedText) {
-            fetchMeaning(activeTab, selectedText);
-          } else {
-            chrome.scripting.executeScript({
-              target: { tabId: activeTab.id },
-              func: () => alert("Please highlight a word to find its meaning."),
-            });
-          }
-        }
-      );
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+    const activeTab = tabs[0];
+    const injectionResults = await chrome.scripting.executeScript({
+      target: { tabId: activeTab.id },
+      func: () => {
+        const selectedText = window.getSelection().toString();
+        return selectedText || null;
+      },
     });
+    const selectedText = injectionResults[0]?.result;
+    if (selectedText) {
+      fetchMeaning(activeTab, selectedText);
+    } else {
+      await chrome.scripting.executeScript({
+        target: { tabId: activeTab.id },
+        func: () => alert("Please highlight a word to find its meaning."),
+      });
+    }
   }
 });
 
 // Function to inject content.js and fetch meaning
-function fetchMeaning(tab, word) {
-  chrome.scripting.executeScript(
-    {
-      target: { tabId: tab.id },
-      files: ["content.js"],
-    },
-    () => {
-      chrome.tabs.sendMessage(tab.id, { action: "showMeaning", word: word });
-    }
-  );
+async function fetchMeaning(tab, word) {
+  await chrome.scripting.executeScript({
+    target: { tabId: tab.id },
+    files: ["content.js"],
+  });
+  chrome.tabs.sendMessage(tab.id, { action: "showMeaning", word: word });
 }
