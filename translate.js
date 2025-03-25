@@ -22,52 +22,61 @@ chrome.storage.local.get(["textToTranslate", "targetLanguages"], async (data) =>
   const word = data.textToTranslate;
   const targetLanguages = data.targetLanguages;
 
-  if (word && targetLanguages && targetLanguages.length > 0) {
-    const translateApiUrl = "https://libretranslate.com/translate";
-    const translations = [];
-    const CACHE_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours
+  // Validate input data
+  if (typeof word !== 'string' || word.trim() === '') {
+    alert("Invalid word to translate.");
+    return;
+  }
 
-    for (const targetLanguage of targetLanguages) {
-      try {
-        // Check cache first
-        const cachedData = await checkCache(word, targetLanguage);
-        if (cachedData && (Date.now() - cachedData.timestamp) < CACHE_EXPIRY) {
-          translations.push(`Translated Word in ${targetLanguage}: ${cachedData.translation}`);
-          continue;
-        }
+  if (!Array.isArray(targetLanguages) || targetLanguages.length === 0) {
+    alert("Invalid target languages.");
+    return;
+  }
 
-        const response = await fetch(translateApiUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            q: word,
-            source: "en",
-            target: targetLanguage,
-            format: "text",
-          }),
-        });
+  const translateApiUrl = "https://libretranslate.com/translate";
+  const translations = [];
+  const CACHE_EXPIRY = 24 * 60 * 60 * 1000; // 24 hours
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error("API Response:", response.status, errorText);
-          throw new Error("Translation failed");
-        }
-
-        const translationResult = await response.json();
-        const translatedWord = translationResult.translatedText;
-        
-        // Save to cache
-        await saveToCache(word, targetLanguage, translatedWord);
-        translations.push(`Translated Word in ${targetLanguage}: ${translatedWord}`);
-      } catch (error) {
-        console.error("Error:", error);
-        alert(`Error: ${error.message}`);
+  for (const targetLanguage of targetLanguages) {
+    try {
+      // Check cache first
+      const cachedData = await checkCache(word, targetLanguage);
+      if (cachedData && (Date.now() - cachedData.timestamp) < CACHE_EXPIRY) {
+        translations.push(`Translated Word in ${targetLanguage}: ${cachedData.translation}`);
+        continue;
       }
-    }
 
-    if (translations.length > 0) {
-      showTranslationsModal(translations);
+      const response = await fetch(translateApiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          q: word,
+          source: "en",
+          target: targetLanguage,
+          format: "text",
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("API Response:", response.status, errorText);
+        throw new Error("Translation failed");
+      }
+
+      const translationResult = await response.json();
+      const translatedWord = translationResult.translatedText;
+      
+      // Save to cache
+      await saveToCache(word, targetLanguage, translatedWord);
+      translations.push(`Translated Word in ${targetLanguage}: ${translatedWord}`);
+    } catch (error) {
+      console.error("Error:", error);
+      alert(`Error: ${error.message}`);
     }
+  }
+
+  if (translations.length > 0) {
+    showTranslationsModal(translations);
   } else {
     alert("No word selected or target languages not set.");
   }
