@@ -15,9 +15,8 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     popup.style.bottom = "20px";
     popup.style.right = "20px";
     popup.style.width = "340px";
-    popup.style.background = "rgba(255, 255, 255, 0.1)"; // Transparent white
-    popup.style.border = "1px solid rgba(255, 255, 255, 0.3)"; // Light border
-    popup.style.backdropFilter = "blur(12px)"; // Blur effect
+    popup.style.background = "#fff"; // Solid white
+    popup.style.border = "1px solid rgba(0, 0, 0, 0.1)"; // Light border
     popup.style.color = "#333";
     popup.style.padding = "20px";
     popup.style.borderRadius = "18px"; // Rounded corners
@@ -27,7 +26,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     popup.style.transition = "all 0.3s ease-in-out";
 
     popup.innerHTML = `
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
       <h3 style="margin: 0; color: #FA9858; font-size: 18px; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);">📚 LexiShift</h3>
       <button id="closePopup" style="
         padding: 5px 12px;
@@ -46,7 +45,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 
       <!-- Word Box -->
       <div style="
-        background: rgba(255, 255, 255, 0.3);
+        background: #f5f5f5;
         padding: 12px;
         border-radius: 12px;
         border-left: 4px solid #FA9858;
@@ -58,7 +57,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 
       <!-- Definition Box -->
       <div style="
-        background: rgba(255, 255, 255, 0.3);
+        background: #f5f5f5;
         padding: 12px;
         border-radius: 12px;
         border-left: 4px solid #5E9FFF;
@@ -70,7 +69,7 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 
       <!-- Example Box -->
       <div style="
-        background: rgba(255, 255, 255, 0.3);
+        background: #f5f5f5;
         padding: 12px;
         border-radius: 12px;
         border-left: 4px solid #8BC34A;
@@ -81,16 +80,15 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       </div>
 
     </div>
-`;
+    `;
 
     document.body.appendChild(popup);
 
     document.getElementById("closePopup").addEventListener("click", () => {
-      popup.style.opacity="0";
-      setTimeout(()=>popup.remove(),300);
+      popup.style.opacity = "0";
+      setTimeout(() => popup.remove(), 300);
     });
 
-    document.body.appendChild(popup);
     const apiUrl = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`;
 
     try {
