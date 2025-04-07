@@ -53,6 +53,8 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       ">
         <p style="margin: 0; font-size: 14px;"><strong>🔤 Word:</strong></p>
         <p style="margin: 5px 0 0; color: #333; font-size: 15px;" id="wordText">${word}</p>
+        <button id="voiceBtn" style="padding: 6px 12px;font-size: 13px; background: rgb(7, 88, 104); color:white; border:none;
+        border-radius:10px; cursor:pointer; transition:background 0.3s ease; margin-left:200px;">🔊 Speak</button>
       </div>
 
       <!-- Definition Box -->
@@ -87,6 +89,14 @@ chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     document.getElementById("closePopup").addEventListener("click", () => {
       popup.style.opacity = "0";
       setTimeout(() => popup.remove(), 300);
+    });
+
+    document.getElementById("voiceBtn").addEventListener("click",()=>{
+      const wordToSpeak=document.getElementById("wordText").innerText;
+      const utterance= new SpeechSynthesisUtterance(wordToSpeak);
+      utterance.lang="en-GB";
+      utterance.rate=1;
+      speechSynthesis.speak(utterance);
     });
 
     const apiUrl = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`;
